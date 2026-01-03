@@ -1,0 +1,7 @@
+# Netlify redirects for Style Finds
+# All outfit URLs redirect to index.html (SPA routing)
+/outfit/*    /index.html    200
+/admin       /index.html    200
+
+# Handle any other paths
+/*           /index.html    200
