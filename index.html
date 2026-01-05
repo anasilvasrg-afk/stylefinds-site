@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Fashion Finds - Shop the Trendiest Styles</title>
+    <meta name="description" content="Discover daily fashion finds and shop curated outfits by season. Find the perfect look and shop directly on Amazon.">
+    <meta property="og:title" content="Daily Fashion Finds - Shop the Trendiest Styles">
+    <meta property="og:description" content="Discover daily fashion finds and shop curated outfits by season.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Daily Fashion Finds - Shop the Trendiest Styles">
+    <meta name="twitter:description" content="Discover daily fashion finds and shop curated outfits by season.">
+    <meta name="twitter:image" content="">
+    
+    <!-- Priority Preconnects -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com">
+    
+    <!-- Async font loading -->
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap"></noscript>
+    
+    <!-- Deferred scripts for faster initial load -->
+    <script defer src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+    
+    <!-- Critical CSS - Inlined for immediate render (Mobile + Desktop) -->
+    <style>
+        /* Base reset */
+        *,::before,::after{box-sizing:border-box;border:0 solid #e7e5e4}
+        html{line-height:1.5;-webkit-text-size-adjust:100%;font-family:ui-sans-serif,system-ui,sans-serif;tab-size:4}
+        body{margin:0;line-height:inherit;font-family:Inter,sans-serif;transition:background-color .3s,color .3s;background:#fff}
+        
+        /* Loading screen */
+        .initial-loader{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .3s}
+        .initial-loader.fade-out{opacity:0;pointer-events:none}
+        .loader-spinner{width:40px;height:40px;border:3px solid #e5e5e5;border-top-color:#78716c;border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        
+        /* Masonry grid - CRITICAL */
+        .masonry-grid{column-count:2;column-gap:.75rem}
+        @media(min-width:640px){.masonry-grid{column-count:3;column-gap:.75rem}}
+        @media(min-width:1024px){.masonry-grid{column-count:4;column-gap:1rem}}
+        @media(min-width:1280px){.masonry-grid{column-count:5;column-gap:1rem}}
+        .masonry-item{break-inside:avoid;margin-bottom:.5rem;cursor:pointer}
+        @media(min-width:1024px){.masonry-item{margin-bottom:.75rem}}
+        .masonry-item img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:.5rem;background:#f5f5f4}
+        
+        /* Header */
+        header{position:sticky;top:0;background:#fff;border-bottom:1px solid #e7e5e4;z-index:50;padding:1rem}
+        nav{display:flex;gap:1rem;overflow-x:auto;padding:.5rem 1rem;background:#fafaf9;border-bottom:1px solid #e7e5e4}
+        
+        /* Utilities */
+        .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        .text-center{text-align:center}
+        .font-light{font-weight:300}
+        .font-medium{font-weight:500}
+        .text-sm{font-size:.875rem;line-height:1.25rem}
+        .text-lg{font-size:1.125rem;line-height:1.75rem}
+        .text-2xl{font-size:1.5rem;line-height:2rem}
+        .rounded-lg{border-radius:.5rem}
+        .shadow-sm{box-shadow:0 1px 2px 0 rgb(0 0 0/.05)}
+        .transition-transform{transition-property:transform;transition-duration:.3s}
+        
+        /* Dark mode */
+        .dark{background:#1a1a1a;color:#e5e5e5}
+        .dark header{background:#1a1a1a;border-color:#333}
+        .dark nav{background:#222;border-color:#333}
+        .dark .bg-white{background:#1a1a1a}
+        .dark .bg-stone-50{background:#262626}
+        .dark .bg-stone-100{background:#333}
+        .dark .bg-stone-200{background:#404040}
+        .dark .text-stone-700{color:#d4d4d4}
+        .dark .text-stone-800{color:#e5e5e5}
+        .dark .text-stone-500{color:#a3a3a3}
+        .dark .text-stone-400{color:#737373}
+        .dark .border-stone-200{border-color:#404040}
+        .dark input,.dark textarea,.dark select{background:#262626;border-color:#404040;color:#e5e5e5}
+        .dark .hover\:bg-stone-200:hover{background:#404040}
+        .dark .hover\:bg-stone-50:hover{background:#333}
+        .dark .initial-loader{background:#1a1a1a}
+        .dark .loader-spinner{border-color:#404040;border-top-color:#a3a3a3}
+        .dark .masonry-item img{background:#262626}
+        .dark .pin-button{background:rgba(255,255,255,.9)}
+        .dark .pin-button:hover{background:#fff}
+        .dark .pin-button svg{stroke:#000!important}
+        
+        .style-notes{font-family:Playfair Display,serif}
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Initial Loading Screen -->
+    <div id="initial-loader" class="initial-loader">
+        <div class="loader-spinner"></div>
+        <p style="margin-top: 16px; color: #78716c; font-size: 14px; letter-spacing: 0.1em;">STYLE FINDS</p>
+    </div>
+    
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const { useState, useMemo, useEffect } = React;
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtIpmK-JE1yy7Xm8JWJFVEcUkCcTihyt4",
+            authDomain: "shop-website-c1a5f.firebaseapp.com",
+            projectId: "shop-website-c1a5f",
+            storageBucket: "shop-website-c1a5f.firebasestorage.app",
+            messagingSenderId: "303465721440",
+            appId: "1:303465721440:web:74dd05748db813c8bc9d05",
+            measurementId: "G-75TT6SG1V0"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const storage = firebase.storage();
+        const analytics = firebase.analytics();
+
+        const trackEvent = (eventName, eventData = {}) => {
+            analytics.logEvent(eventName, eventData);
+            console.log('Analytics:', eventName, eventData);
+        };
+
+        // Icons
+        const ChevronLeft = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>);
+        const Pin = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg>);
+        const ArrowUp = () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>);
+        const Copy = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>);
+        const Check = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
+        const Share2 = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>);
+        const Search = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>);
+        const Plus = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>);
+        const Trash = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>);
+        const Edit = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>);
+        const X = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>);
+        const Moon = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>);
+        const Sun = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>);
+        const Duplicate = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>);
+
+        const OptimizedImage = ({ src, alt, className, style, dataPinUrl, dataPinDescription, imageIndex = 999 }) => {
+            const [loading, setLoading] = useState(true);
+            const [error, setError] = useState(false);
+            
+            // Responsive eager loading: mobile = 6, tablet = 12, desktop = 15
+            const getEagerLoadThreshold = () => {
+                if (typeof window === 'undefined') return 6;
+                const width = window.innerWidth;
+                if (width < 768) return 6;   // Mobile
+                if (width < 1024) return 12; // Tablet
+                return 15;                    // Desktop
+            };
+            
+            const shouldEagerLoad = imageIndex < getEagerLoadThreshold();
+            
+            useEffect(() => {
+                if (src) {
+                    try {
+                        const url = new URL(src);
+                        const hostname = url.hostname;
+                        if (!document.querySelector(`link[href*="${hostname}"]`)) {
+                            const preconnect = document.createElement('link');
+                            preconnect.rel = 'preconnect';
+                            preconnect.href = `https://${hostname}`;
+                            document.head.appendChild(preconnect);
+                        }
+                    } catch (e) {}
+                }
+            }, [src]);
+            
+            return (
+                <div className="relative">
+                    {loading && <div className="absolute inset-0 bg-stone-200 dark:bg-neutral-700 animate-pulse" />}
+                    {error ? (
+                        <div className="absolute inset-0 bg-stone-100 dark:bg-neutral-800 flex items-center justify-center">
+                            <span className="text-stone-400 dark:text-neutral-500 text-sm">Image unavailable</span>
+                        </div>
+                    ) : (
+                        <img 
+                            src={src} 
+                            alt={alt} 
+                            className={className} 
+                            style={style} 
+                            loading={shouldEagerLoad ? "eager" : "lazy"} 
+                            decoding="async"
+                            fetchpriority={imageIndex < 2 ? "high" : "auto"}
+                            data-pin-url={dataPinUrl}
+                            data-pin-description={dataPinDescription}
+                            onLoad={() => setLoading(false)} 
+                            onError={() => { setLoading(false); setError(true); }} 
+                        />
+                    )}
+                </div>
+            );
+        };
+
+        // Admin Login Component (Login Only - No Sign Up)
+        const AdminLogin = ({ onLogin, onClose }) => {
+            const [email, setEmail] = useState('');
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+            const [loading, setLoading] = useState(false);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setError('');
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    onLogin();
+                } catch (err) {
+                    setError(err.message);
+                }
+                setLoading(false);
+            };
+
+            return (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 w-full max-w-md relative">
+                        <button onClick={onClose} className="absolute top-4 right-4 text-stone-500 hover:text-stone-700 dark:text-neutral-400 dark:hover:text-neutral-200"><X /></button>
+                        <h2 className="text-2xl font-light mb-6 text-center dark:text-white">Admin Login</h2>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-3 border border-stone-200 rounded-lg dark:bg-neutral-700 dark:border-neutral-600 dark:text-white" required />
+                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-3 border border-stone-200 rounded-lg dark:bg-neutral-700 dark:border-neutral-600 dark:text-white" required />
+                            {error && <p className="text-red-500 text-sm">{error}</p>}
+                            <button type="submit" disabled={loading} className="w-full py-3 bg-stone-800 text-white rounded-lg hover:bg-stone-900 disabled:opacity-50 dark:bg-neutral-600 dark:hover:bg-neutral-500">
+                                {loading ? 'Loading...' : 'Login'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        // Add/Edit Outfit Modal with Image Upload
+        const OutfitModal = ({ outfit, onSave, onClose, darkMode }) => {
+            const [formData, setFormData] = useState(outfit || {
+                mainImage: '', season: 'fall', slug: '', seoTitle: '', metaDescription: '', mainImageAlt: '', fullSeoDescription: '', outfitCode: '', items: []
+            });
+            const [newItem, setNewItem] = useState({ name: '', image: '', link: '', altText: '' });
+            const [saving, setSaving] = useState(false);
+            const [uploading, setUploading] = useState(false);
+            const [uploadingItem, setUploadingItem] = useState(false);
+            const [editingItemIndex, setEditingItemIndex] = useState(null);
+
+            // Generate slug from text
+            const generateSlug = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+            // Auto-generate slug when outfit code or SEO title changes
+            const autoGenerateSlug = (outfitCode, seoTitle, season) => {
+                const parts = [];
+                if (outfitCode) parts.push(outfitCode);
+                if (seoTitle) {
+                    parts.push(generateSlug(seoTitle));
+                } else {
+                    parts.push(season + '-outfit');
+                }
+                return parts.join('-');
+            };
+
+            // Image compression function - reduces file size for faster uploads
+            const compressImage = (file, maxWidth = 1200, quality = 0.8) => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            
+                            // Scale down if wider than maxWidth
+                            if (width > maxWidth) {
+                                height = (height * maxWidth) / width;
+                                width = maxWidth;
+                            }
+                            
+                            canvas.width = width;
+                            canvas.height = height;
+                            
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            canvas.toBlob((blob) => {
+                                resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                            }, 'image/jpeg', quality);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            };
+
+            // Update slug when outfit code or title changes
+            useEffect(() => {
+                if (!outfit) { // Only auto-generate for new outfits
+                    const newSlug = autoGenerateSlug(formData.outfitCode, formData.seoTitle, formData.season);
+                    setFormData(prev => ({ ...prev, slug: newSlug }));
+                }
+            }, [formData.outfitCode, formData.seoTitle, formData.season]);
+
+            // Upload main outfit image
+            const handleMainImageUpload = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                setUploading(true);
+                try {
+                    // Compress image before upload
+                    const compressedFile = await compressImage(file, 1200, 0.85);
+                    const storageRef = storage.ref();
+                    const fileRef = storageRef.child(`outfits/${Date.now()}_${file.name.replace(/\.[^/.]+$/, '')}.jpg`);
+                    await fileRef.put(compressedFile);
+                    const url = await fileRef.getDownloadURL();
+                    setFormData({ ...formData, mainImage: url });
+                } catch (err) {
+                    console.error('Upload error:', err);
+                    alert(`Upload failed: ${err.message}\n\nPlease check Firebase Storage rules or paste an image URL instead.`);
+                }
+                setUploading(false);
+            };
+
+            // Upload product item image
+            const handleItemImageUpload = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                setUploadingItem(true);
+                try {
+                    // Compress image before upload
+                    const compressedFile = await compressImage(file, 800, 0.8);
+                    const storageRef = storage.ref();
+                    const fileRef = storageRef.child(`products/${Date.now()}_${file.name.replace(/\.[^/.]+$/, '')}.jpg`);
+                    await fileRef.put(compressedFile);
+                    const url = await fileRef.getDownloadURL();
+                    setNewItem({ ...newItem, image: url });
+                } catch (err) {
+                    console.error('Upload error:', err);
+                    alert(`Upload failed: ${err.message}\n\nPlease check Firebase Storage rules or paste an image URL instead.`);
+                }
+                setUploadingItem(false);
+            };
+
+            const addItem = () => {
+                if (newItem.name && newItem.image && newItem.link) {
+                    setFormData({ ...formData, items: [...formData.items, { ...newItem }] });
+                    setNewItem({ name: '', image: '', link: '', altText: '' });
+                }
+            };
+
+            const removeItem = (idx) => {
+                setFormData({ ...formData, items: formData.items.filter((_, i) => i !== idx) });
+            };
+
+            const handleSave = async () => {
+                if (!formData.mainImage) {
+                    alert('Please add a main outfit image');
+                    return;
+                }
+                setSaving(true);
+                const finalSlug = formData.slug || autoGenerateSlug(formData.outfitCode, formData.seoTitle, formData.season) || `${formData.season}-outfit-${Date.now()}`;
+                const data = { 
+                    ...formData, 
+                    dateAdded: outfit?.dateAdded || new Date().toISOString(),
+                    slug: finalSlug
+                };
+                await onSave(data);
+                setSaving(false);
+            };
+
+            const modalBg = darkMode ? 'bg-neutral-800' : 'bg-white';
+            const textColor = darkMode ? 'text-white' : 'text-stone-800';
+            const textMuted = darkMode ? 'text-neutral-400' : 'text-stone-600';
+            const inputBg = darkMode ? 'bg-neutral-700 border-neutral-600 text-white' : 'bg-white border-stone-200';
+            const cardBg = darkMode ? 'bg-neutral-700' : 'bg-stone-50';
+
+            return (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+                    <div className={`${modalBg} rounded-2xl p-6 w-full max-w-2xl my-8 relative max-h-[90vh] overflow-y-auto`}>
+                        <button onClick={onClose} className={`absolute top-4 right-4 ${textMuted} hover:opacity-70`}><X /></button>
+                        <h2 className={`text-2xl font-light mb-6 ${textColor}`}>{outfit ? 'Edit Outfit' : 'Add New Outfit'}</h2>
+                        
+                        <div className="space-y-4">
+                            {/* Main Outfit Image Upload */}
+                            <div>
+                                <label className={`block text-sm font-medium ${textColor} mb-2`}>Main Outfit Image *</label>
+                                <div className="space-y-2">
+                                    <input 
+                                        type="file" 
+                                        accept="image/*"
+                                        onChange={handleMainImageUpload}
+                                        className={`w-full p-2 border rounded-lg text-sm ${inputBg}`}
+                                        disabled={uploading}
+                                    />
+                                    {uploading && <p className={`text-xs ${textMuted}`}>Uploading...</p>}
+                                    {formData.mainImage && (
+                                        <div className="relative w-32 h-40">
+                                            <img src={formData.mainImage} alt="Main outfit" className="w-full h-full object-cover rounded" />
+                                            <button 
+                                                onClick={() => setFormData({ ...formData, mainImage: '' })}
+                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                            >
+                                                <X />
+                                            </button>
+                                        </div>
+                                    )}
+                                    <p className={`text-xs ${textMuted}`}>Or paste image URL:</p>
+                                    <input 
+                                        type="url" 
+                                        value={formData.mainImage} 
+                                        onChange={(e) => setFormData({ ...formData, mainImage: e.target.value })} 
+                                        className={`w-full p-2 border rounded-lg text-sm ${inputBg}`} 
+                                        placeholder="https://..." 
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className={`block text-sm font-medium ${textColor} mb-1`}>Season *</label>
+                                    <select value={formData.season} onChange={(e) => setFormData({ ...formData, season: e.target.value })} className={`w-full p-3 border rounded-lg ${inputBg}`}>
+                                        <option value="spring">Spring</option>
+                                        <option value="summer">Summer</option>
+                                        <option value="fall">Fall</option>
+                                        <option value="winter">Winter</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className={`block text-sm font-medium ${textColor} mb-1`}>Outfit Code/Number</label>
+                                    <input 
+                                        type="text" 
+                                        value={formData.outfitCode} 
+                                        onChange={(e) => setFormData({ ...formData, outfitCode: e.target.value })} 
+                                        className={`w-full p-3 border rounded-lg ${inputBg}`} 
+                                        placeholder="1221, holiday-2025, etc." 
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className={`block text-sm font-medium ${textColor} mb-1`}>URL Slug (auto-generated)</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.slug} 
+                                    onChange={(e) => setFormData({ ...formData, slug: generateSlug(e.target.value) })} 
+                                    className={`w-full p-3 border rounded-lg ${inputBg}`} 
+                                    placeholder="1221-fall-cozy-outfit" 
+                                />
+                                <p className={`text-xs ${textMuted} mt-1`}>This will be the URL: /outfit/{formData.slug || 'your-slug-here'}</p>
+                            </div>
+
+                            <div className="border-t pt-4 mt-4 border-stone-200 dark:border-neutral-600">
+                                <h3 className={`font-medium ${textColor} mb-2`}>SEO Settings</h3>
+                                <div className="space-y-3">
+                                    <div>
+                                        <label className={`block text-sm ${textMuted} mb-1`}>SEO Title (60 chars max) - Shows on Pinterest!</label>
+                                        <input type="text" maxLength="60" value={formData.seoTitle} onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })} className={`w-full p-3 border rounded-lg ${inputBg}`} placeholder="Fall Cozy Sweater Outfit - Style Finds" />
+                                    </div>
+                                    <div>
+                                        <label className={`block text-sm ${textMuted} mb-1`}>Meta Description (160 chars) - Shows on Pinterest!</label>
+                                        <textarea maxLength="160" value={formData.metaDescription} onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })} className={`w-full p-3 border rounded-lg h-20 ${inputBg}`} placeholder="Shop this cozy fall outfit featuring a ribbed sweater, plaid skirt, and leather boots. Perfect autumn fashion inspiration." />
+                                    </div>
+                                    <div>
+                                        <label className={`block text-sm ${textMuted} mb-1`}>Main Image Alt Text</label>
+                                        <input type="text" value={formData.mainImageAlt} onChange={(e) => setFormData({ ...formData, mainImageAlt: e.target.value })} className={`w-full p-3 border rounded-lg ${inputBg}`} placeholder="Fall outfit with brown sweater and plaid skirt" />
+                                    </div>
+                                    <div>
+                                        <label className={`block text-sm ${textMuted} mb-1`}>Style Notes (Full article - visible to users)</label>
+                                        <textarea value={formData.fullSeoDescription} onChange={(e) => setFormData({ ...formData, fullSeoDescription: e.target.value })} className={`w-full p-3 border rounded-lg h-32 ${inputBg}`} placeholder="Write a detailed description of this outfit. Include style tips, sizing info, occasions to wear it, and any other helpful information for readers." />
+                                        <p className={`text-xs ${textMuted} mt-1`}>This appears in a styled "Style Notes" section at the bottom of the outfit page.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="border-t pt-4 mt-4 border-stone-200 dark:border-neutral-600">
+                                <h3 className={`font-medium ${textColor} mb-3`}>Product Items ({formData.items.length})</h3>
+                                
+                                {/* Existing Items */}
+                                {formData.items.map((item, idx) => (
+                                    <div key={idx} className={`p-3 ${cardBg} rounded-lg mb-2`}>
+                                        {editingItemIndex === idx ? (
+                                            <div className="space-y-3">
+                                                <div className="flex items-center gap-2">
+                                                    <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded flex-shrink-0" />
+                                                    <div className="flex-1 space-y-2">
+                                                        <input 
+                                                            type="text" 
+                                                            value={item.name}
+                                                            onChange={(e) => {
+                                                                const updated = [...formData.items];
+                                                                updated[idx] = { ...updated[idx], name: e.target.value, altText: e.target.value };
+                                                                setFormData({ ...formData, items: updated });
+                                                            }}
+                                                            className={`w-full p-2 border rounded text-sm ${inputBg}`}
+                                                            placeholder="Product name"
+                                                        />
+                                                        <input 
+                                                            type="url" 
+                                                            value={item.image}
+                                                            onChange={(e) => {
+                                                                const updated = [...formData.items];
+                                                                updated[idx] = { ...updated[idx], image: e.target.value };
+                                                                setFormData({ ...formData, items: updated });
+                                                            }}
+                                                            className={`w-full p-2 border rounded text-sm ${inputBg}`}
+                                                            placeholder="Image URL"
+                                                        />
+                                                        <input 
+                                                            type="url" 
+                                                            value={item.link}
+                                                            onChange={(e) => {
+                                                                const updated = [...formData.items];
+                                                                updated[idx] = { ...updated[idx], link: e.target.value };
+                                                                setFormData({ ...formData, items: updated });
+                                                            }}
+                                                            className={`w-full p-2 border rounded text-sm ${inputBg}`}
+                                                            placeholder="Amazon affiliate link"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <button 
+                                                        onClick={() => setEditingItemIndex(null)}
+                                                        className={`flex-1 py-2 px-3 rounded text-sm ${darkMode ? 'bg-green-700 hover:bg-green-600 text-white' : 'bg-green-600 hover:bg-green-700 text-white'}`}
+                                                    >
+                                                        Save Changes
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => setEditingItemIndex(null)}
+                                                        className={`flex-1 py-2 px-3 rounded text-sm ${darkMode ? 'bg-neutral-600 hover:bg-neutral-500 text-white' : 'bg-stone-200 hover:bg-stone-300'}`}
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-2">
+                                                <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
+                                                <div className="flex-1">
+                                                    <p className={`text-sm font-medium ${textColor}`}>{item.name}</p>
+                                                    <p className={`text-xs ${textMuted} truncate`}>{item.link.substring(0, 40)}...</p>
+                                                </div>
+                                                <button 
+                                                    onClick={() => setEditingItemIndex(idx)}
+                                                    className="p-1 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded"
+                                                    title="Edit this product"
+                                                >
+                                                    <Edit />
+                                                </button>
+                                                <button onClick={() => removeItem(idx)} className="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded"><Trash /></button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+
+                                {/* Add New Item */}
+                                <div className={`${cardBg} p-4 rounded-lg mt-3`}>
+                                    <h4 className={`text-sm font-medium mb-3 ${textColor}`}>Add Product Item</h4>
+                                    <div className="space-y-3">
+                                        <input type="text" placeholder="Item Name" value={newItem.name} onChange={(e) => setNewItem({ ...newItem, name: e.target.value, altText: e.target.value })} className={`w-full p-2 border rounded-lg text-sm ${inputBg}`} />
+                                        
+                                        <div>
+                                            <input 
+                                                type="file" 
+                                                accept="image/*"
+                                                onChange={handleItemImageUpload}
+                                                className={`w-full p-2 border rounded-lg text-sm ${inputBg}`}
+                                                disabled={uploadingItem}
+                                            />
+                                            {uploadingItem && <p className={`text-xs ${textMuted} mt-1`}>Uploading...</p>}
+                                        </div>
+                                        
+                                        {newItem.image && (
+                                            <div className="flex items-center gap-2">
+                                                <img src={newItem.image} alt="Preview" className="w-12 h-12 object-cover rounded" />
+                                                <span className={`text-xs ${textMuted}`}>Image ready</span>
+                                            </div>
+                                        )}
+                                        
+                                        <input type="url" placeholder="Or paste Image URL" value={newItem.image} onChange={(e) => setNewItem({ ...newItem, image: e.target.value })} className={`w-full p-2 border rounded-lg text-sm ${inputBg}`} />
+                                        <input type="url" placeholder="Amazon Affiliate Link" value={newItem.link} onChange={(e) => setNewItem({ ...newItem, link: e.target.value })} className={`w-full p-2 border rounded-lg text-sm ${inputBg}`} />
+                                        <button onClick={addItem} disabled={!newItem.name || !newItem.image || !newItem.link} className={`w-full py-2 rounded-lg text-sm flex items-center justify-center gap-2 disabled:opacity-50 ${darkMode ? 'bg-neutral-600 hover:bg-neutral-500 text-white' : 'bg-stone-200 hover:bg-stone-300'}`}><Plus /> Add Item</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 mt-6">
+                            <button onClick={onClose} className={`flex-1 py-3 border rounded-lg ${darkMode ? 'border-neutral-600 hover:bg-neutral-700' : 'border-stone-200 hover:bg-stone-50'}`}>Cancel</button>
+                            <button onClick={handleSave} disabled={saving || !formData.mainImage} className="flex-1 py-3 bg-stone-800 text-white rounded-lg hover:bg-stone-900 disabled:opacity-50 dark:bg-neutral-600 dark:hover:bg-neutral-500">
+                                {saving ? 'Saving...' : 'Save Outfit'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        function FashionFinds() {
+            const [view, setView] = useState('home');
+            const [selectedSeason, setSelectedSeason] = useState(null);
+            const [selectedCategory, setSelectedCategory] = useState(null);
+            const [selectedOutfit, setSelectedOutfit] = useState(null);
+            const [displayCount, setDisplayCount] = useState(12);
+            const [scrollPosition, setScrollPosition] = useState(0);
+            const [showBackToTop, setShowBackToTop] = useState(false);
+            const [copied, setCopied] = useState(false);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [outfits, setOutfits] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [user, setUser] = useState(null);
+            const [showLogin, setShowLogin] = useState(false);
+            const [showOutfitModal, setShowOutfitModal] = useState(false);
+            const [editingOutfit, setEditingOutfit] = useState(null);
+            const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+            const [logoTapCount, setLogoTapCount] = useState(0);
+            const [lastTapTime, setLastTapTime] = useState(0);
+            const [showMobileMenu, setShowMobileMenu] = useState(false);
+            const [showSearch, setShowSearch] = useState(false);
+
+            // Dark mode effect
+            useEffect(() => {
+                if (darkMode) {
+                    document.body.classList.add('dark');
+                } else {
+                    document.body.classList.remove('dark');
+                }
+                localStorage.setItem('darkMode', darkMode);
+            }, [darkMode]);
+
+            // Secret admin access via /admin path or #admin hash
+            useEffect(() => {
+                const checkAdminAccess = () => {
+                    const path = window.location.pathname;
+                    const hash = window.location.hash;
+                    if (path === '/admin' || hash === '#admin') {
+                        setShowLogin(true);
+                        window.history.replaceState({}, '', '/');
+                    }
+                };
+                checkAdminAccess();
+                window.addEventListener('hashchange', checkAdminAccess);
+                return () => window.removeEventListener('hashchange', checkAdminAccess);
+            }, []);
+
+            // Logo tap handler for secret admin access
+            const handleLogoTap = () => {
+                const now = Date.now();
+                if (now - lastTapTime < 500) {
+                    const newCount = logoTapCount + 1;
+                    setLogoTapCount(newCount);
+                    if (newCount >= 5) {
+                        setShowLogin(true);
+                        setLogoTapCount(0);
+                    }
+                } else {
+                    setLogoTapCount(1);
+                }
+                setLastTapTime(now);
+            };
+
+            // Auth listener
+            useEffect(() => {
+                const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
+                return () => unsubscribe();
+            }, []);
+
+            // Load outfits from Firebase - ordered by dateAdded descending (newest first)
+            useEffect(() => {
+                const unsubscribe = db.collection('outfits').orderBy('dateAdded', 'desc').onSnapshot((snapshot) => {
+                    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setOutfits(data);
+                    setLoading(false);
+                    // Hide the initial loader
+                    const loader = document.getElementById('initial-loader');
+                    if (loader) {
+                        loader.classList.add('fade-out');
+                        setTimeout(() => loader.remove(), 300);
+                    }
+                });
+                return () => unsubscribe();
+            }, []);
+
+            // PATH-BASED URL handling - Check URL on load
+            useEffect(() => {
+                const path = window.location.pathname;
+                if (path.startsWith('/outfit/')) {
+                    const slug = path.replace('/outfit/', '');
+                    const outfit = outfits.find(o => o.slug === slug || o.id === slug);
+                    if (outfit) {
+                        setSelectedOutfit(outfit);
+                    }
+                }
+            }, [outfits]);
+
+            // Update URL and meta tags when outfit is selected
+            useEffect(() => {
+                if (selectedOutfit) {
+                    const newPath = `/outfit/${selectedOutfit.slug || selectedOutfit.id}`;
+                    window.history.pushState({ outfit: selectedOutfit.slug || selectedOutfit.id }, '', newPath);
+                    
+                    // Update meta tags for Pinterest/social sharing
+                    const title = selectedOutfit.seoTitle || 'Shop This Look - Style Finds';
+                    const description = selectedOutfit.metaDescription || `Discover this ${selectedOutfit.season} outfit and shop the items below.`;
+                    const imageUrl = selectedOutfit.mainImage;
+                    const currentUrl = window.location.href;
+                    
+                    document.title = title;
+                    
+                    const updateMetaTag = (property, content) => {
+                        let tag = document.querySelector(`meta[property="${property}"]`) || document.querySelector(`meta[name="${property}"]`);
+                        if (!tag) {
+                            tag = document.createElement('meta');
+                            if (property.startsWith('og:') || property.startsWith('twitter:')) {
+                                tag.setAttribute('property', property);
+                            } else {
+                                tag.setAttribute('name', property);
+                            }
+                            document.head.appendChild(tag);
+                        }
+                        tag.setAttribute('content', content);
+                    };
+                    
+                    updateMetaTag('description', description);
+                    updateMetaTag('og:title', title);
+                    updateMetaTag('og:description', description);
+                    updateMetaTag('og:image', imageUrl);
+                    updateMetaTag('og:url', currentUrl);
+                    updateMetaTag('twitter:card', 'summary_large_image');
+                    updateMetaTag('twitter:title', title);
+                    updateMetaTag('twitter:description', description);
+                    updateMetaTag('twitter:image', imageUrl);
+                }
+            }, [selectedOutfit]);
+
+            // Handle browser back/forward
+            useEffect(() => {
+                const handlePopState = () => {
+                    const path = window.location.pathname;
+                    if (path.startsWith('/outfit/')) {
+                        const slug = path.replace('/outfit/', '');
+                        const outfit = outfits.find(o => o.slug === slug || o.id === slug);
+                        if (outfit) {
+                            setSelectedOutfit(outfit);
+                        }
+                    } else {
+                        setSelectedOutfit(null);
+                        setView('home');
+                        setSelectedSeason(null);
+                        setSelectedCategory(null);
+                        
+                        // Reset meta tags to default
+                        document.title = 'Daily Fashion Finds - Shop the Trendiest Styles';
+                        const updateMetaTag = (property, content) => {
+                            let tag = document.querySelector(`meta[property="${property}"]`) || document.querySelector(`meta[name="${property}"]`);
+                            if (tag) tag.setAttribute('content', content);
+                        };
+                        updateMetaTag('description', 'Discover daily fashion finds and shop curated outfits by season. Find the perfect look and shop directly on Amazon.');
+                        updateMetaTag('og:title', 'Daily Fashion Finds - Shop the Trendiest Styles');
+                        updateMetaTag('og:description', 'Discover daily fashion finds and shop curated outfits by season.');
+                    }
+                };
+                window.addEventListener('popstate', handlePopState);
+                return () => window.removeEventListener('popstate', handlePopState);
+            }, [outfits]);
+
+            const allAccessories = useMemo(() => {
+                const fromOutfits = outfits.flatMap(outfit => 
+                    (outfit.items || []).filter(item => item.isAccessory && item.category).map((item, idx) => ({
+                        id: `${outfit.id}-${idx}`, name: item.name, image: item.image, category: item.category, link: item.link
+                    }))
+                );
+                const uniqueAccessories = [];
+                const seenLinks = new Set();
+                fromOutfits.forEach(acc => { if (!seenLinks.has(acc.link)) { seenLinks.add(acc.link); uniqueAccessories.push(acc); } });
+                return uniqueAccessories;
+            }, [outfits]);
+
+            const filteredOutfits = useMemo(() => {
+                let filtered = selectedSeason ? outfits.filter(o => o.season === selectedSeason) : outfits;
+                if (searchQuery.trim()) {
+                    const query = searchQuery.toLowerCase();
+                    filtered = filtered.filter(outfit => {
+                        const seasonMatch = outfit.season.toLowerCase().includes(query);
+                        const itemsMatch = (outfit.items || []).some(item => item.name.toLowerCase().includes(query) || (item.category && item.category.toLowerCase().includes(query)));
+                        const seoMatch = (outfit.seoTitle || '').toLowerCase().includes(query) || (outfit.metaDescription || '').toLowerCase().includes(query);
+                        const outfitCodeMatch = (outfit.outfitCode || '').toLowerCase().includes(query);
+                        const fullDescMatch = (outfit.fullSeoDescription || '').toLowerCase().includes(query);
+                        const slugMatch = (outfit.slug || '').toLowerCase().includes(query);
+                        return seasonMatch || itemsMatch || seoMatch || outfitCodeMatch || fullDescMatch || slugMatch;
+                    });
+                }
+                return filtered;
+            }, [selectedSeason, searchQuery, outfits]);
+
+            const displayedOutfits = useMemo(() => filteredOutfits.slice(0, displayCount), [filteredOutfits, displayCount]);
+            const filteredAccessories = useMemo(() => selectedCategory ? allAccessories.filter(a => a.category === selectedCategory) : allAccessories, [selectedCategory, allAccessories]);
+
+            // Get nearby outfits for "Keep Exploring" section
+            const nearbyOutfits = useMemo(() => {
+                if (!selectedOutfit) return [];
+                const currentIndex = outfits.findIndex(o => o.id === selectedOutfit.id);
+                if (currentIndex === -1) return [];
+                
+                const nearby = [];
+                // Get 2 previous outfits
+                if (currentIndex > 1) {
+                    nearby.push(outfits[currentIndex - 2]);
+                }
+                if (currentIndex > 0) {
+                    nearby.push(outfits[currentIndex - 1]);
+                }
+                // Get 2 next outfits
+                if (currentIndex < outfits.length - 1) {
+                    nearby.push(outfits[currentIndex + 1]);
+                }
+                if (currentIndex < outfits.length - 2) {
+                    nearby.push(outfits[currentIndex + 2]);
+                }
+                
+                return nearby.slice(0, 4);
+            }, [selectedOutfit, outfits]);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    setShowBackToTop(window.pageYOffset > 500);
+                    if (view === 'home' || (view === 'seasons' && selectedSeason)) {
+                        if (window.pageYOffset + window.innerHeight >= document.documentElement.scrollHeight - 500) {
+                            if (displayCount < filteredOutfits.length) setDisplayCount(prev => Math.min(prev + 12, filteredOutfits.length));
+                        }
+                    }
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, [view, selectedSeason, displayCount, filteredOutfits.length]);
+
+            const handleOutfitClick = (outfit) => { 
+                setScrollPosition(window.pageYOffset);
+                // Clear the current outfit first to reset images, then set new one
+                setSelectedOutfit(null);
+                // Use setTimeout to ensure state is cleared before setting new outfit
+                setTimeout(() => {
+                    setSelectedOutfit(outfit); 
+                    window.scrollTo(0, 0);
+                }, 10);
+                trackEvent('outfit_click', { outfit_id: outfit.id, season: outfit.season }); 
+            };
+            
+            const handleBack = () => {
+                if (selectedOutfit) { 
+                    setSelectedOutfit(null); 
+                    window.history.pushState({}, '', '/');
+                    document.title = 'Daily Fashion Finds - Shop the Trendiest Styles';
+                    setTimeout(() => window.scrollTo(0, scrollPosition), 0); 
+                }
+                else if (selectedSeason) { setSelectedSeason(null); setView('seasons'); setDisplayCount(12); }
+                else if (selectedCategory) { setSelectedCategory(null); setView('accessories'); }
+                else setView('home');
+            };
+            
+            const scrollToTop = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); setDisplayCount(12); };
+
+            // Pinterest sharing - uses path-based URL
+            const handlePinIt = (imageUrl, description, outfitId, slug, seoTitle) => {
+                const baseUrl = window.location.origin;
+                const outfitUrl = `${baseUrl}/outfit/${slug || outfitId}`;
+                const pinDescription = seoTitle ? `${seoTitle} - ${description}` : description;
+                const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(outfitUrl)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(pinDescription)}`;
+                window.open(pinterestUrl, '_blank', 'width=750,height=600');
+                trackEvent('pin_click', { outfit_id: outfitId });
+            };
+
+            const handlePinItem = (imageUrl, itemName, itemLink, outfitId) => {
+                const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(itemLink)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(itemName)}`;
+                window.open(pinterestUrl, '_blank', 'width=750,height=600');
+                trackEvent('pin_item_click', { outfit_id: outfitId, item_name: itemName });
+            };
+
+            const copyLink = () => { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); trackEvent('copy_link'); };
+            const shareToFacebook = () => { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank', 'width=600,height=400'); trackEvent('facebook_share'); };
+            const shareToMessenger = () => {
+                const url = encodeURIComponent(window.location.href);
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (isMobile) window.open(`fb-messenger://share/?link=${url}`, '_blank');
+                else window.open(`https://www.facebook.com/dialog/send?link=${url}&app_id=`, '_blank', 'width=600,height=400');
+                trackEvent('messenger_share');
+            };
+            const shareToInstagram = () => {
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (isMobile) window.open(`instagram://sharesheet/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+                else { alert('To share on Instagram from desktop: Take a screenshot and upload to Instagram, or copy the link!\n\n' + window.location.href); navigator.clipboard.writeText(window.location.href); }
+                trackEvent('instagram_share');
+            };
+
+            const saveOutfit = async (data) => {
+                try {
+                    // Check if this is a duplicate (has _isDuplicate flag) or a new outfit (no id)
+                    if (editingOutfit && editingOutfit.id && !editingOutfit._isDuplicate) {
+                        // Update existing outfit
+                        await db.collection('outfits').doc(editingOutfit.id).update(data);
+                    } else {
+                        // Create new outfit (including duplicates)
+                        await db.collection('outfits').add(data);
+                    }
+                    setShowOutfitModal(false);
+                    setEditingOutfit(null);
+                } catch (err) { console.error('Error saving:', err); alert('Error saving outfit'); }
+            };
+
+            const deleteOutfit = async (id) => {
+                if (window.confirm('Are you sure you want to delete this outfit?')) {
+                    try {
+                        await db.collection('outfits').doc(id).delete();
+                        if (selectedOutfit?.id === id) {
+                            setSelectedOutfit(null);
+                            window.history.pushState({}, '', '/');
+                        }
+                    } catch (err) { console.error('Error deleting:', err); }
+                }
+            };
+
+            // Duplicate outfit function
+            const duplicateOutfit = (outfit) => {
+                const duplicatedOutfit = {
+                    ...outfit,
+                    seoTitle: `${outfit.seoTitle || 'Outfit'} (Copy)`,
+                    slug: `${outfit.slug}-copy-${Date.now()}`,
+                    outfitCode: outfit.outfitCode ? `${outfit.outfitCode}-copy` : '',
+                    dateAdded: new Date().toISOString()
+                };
+                delete duplicatedOutfit.id;
+                setEditingOutfit(null);
+                setShowOutfitModal(true);
+                // Set timeout to ensure modal is open before setting form data
+                setTimeout(() => {
+                    const modal = document.querySelector('[data-outfit-modal]');
+                    if (modal) {
+                        // The modal will receive this as the outfit prop
+                    }
+                }, 100);
+                // Actually pass the duplicated data by setting editingOutfit to a special state
+                setEditingOutfit({ ...duplicatedOutfit, _isDuplicate: true });
+            };
+
+            const handleLogout = () => { auth.signOut(); };
+
+            return (
+                <div className={`min-h-screen pb-0 ${darkMode ? 'bg-neutral-900 text-neutral-100' : 'bg-white'}`}>
+                    {/* Compact Header */}
+                    <header className={`sticky top-0 z-50 border-b ${darkMode ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-stone-200'}`}>
+                        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+                            {/* Left: Back button OR Menu Icon */}
+                            {selectedOutfit || view !== 'home' || selectedSeason || selectedCategory ? (
+                                <button 
+                                    onClick={handleBack} 
+                                    className="p-2 hover:opacity-70"
+                                    aria-label="Go back"
+                                >
+                                    <ChevronLeft />
+                                </button>
+                            ) : (
+                                <button 
+                                    onClick={() => setShowMobileMenu(!showMobileMenu)} 
+                                    className="p-2 hover:opacity-70"
+                                    aria-label="Menu"
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                                    </svg>
+                                </button>
+                            )}
+
+                            {/* Center: Logo */}
+                            <h1 
+                                onClick={handleLogoTap}
+                                className={`text-xl md:text-2xl font-light tracking-wider cursor-default select-none ${darkMode ? 'text-neutral-100' : 'text-stone-800'}`}
+                            >
+                                STYLE FINDS
+                            </h1>
+
+                            {/* Right: Search + Dark Mode */}
+                            <div className="flex items-center gap-2">
+                                <button 
+                                    onClick={() => setShowSearch(!showSearch)} 
+                                    className="p-2 hover:opacity-70"
+                                    aria-label="Search"
+                                >
+                                    <Search />
+                                </button>
+                                <button 
+                                    onClick={() => setDarkMode(!darkMode)} 
+                                    className={`p-2 rounded-full transition-colors ${darkMode ? 'text-yellow-400' : 'text-stone-600'}`}
+                                    aria-label={darkMode ? 'Light mode' : 'Dark mode'}
+                                >
+                                    {darkMode ? <Sun /> : <Moon />}
+                                </button>
+                                {user && (
+                                    <button onClick={() => { setEditingOutfit(null); setShowOutfitModal(true); }} className="p-2 bg-stone-800 text-white rounded-full dark:bg-neutral-600" title="Add Outfit"><Plus /></button>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Expandable Search Bar */}
+                        {showSearch && (
+                            <div className={`px-4 pb-3 ${darkMode ? 'bg-neutral-900' : 'bg-white'}`}>
+                                <input 
+                                    type="text" 
+                                    placeholder="Search outfits, seasons, items..." 
+                                    value={searchQuery} 
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className={`w-full px-4 py-2 border rounded-lg text-sm ${darkMode ? 'bg-neutral-800 border-neutral-600 text-white placeholder-neutral-500' : 'border-stone-200'}`}
+                                    autoFocus
+                                />
+                            </div>
+                        )}
+
+                        {/* Mobile Menu Dropdown */}
+                        {showMobileMenu && (
+                            <div className={`absolute top-full left-0 right-0 border-b shadow-lg ${darkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-stone-200'}`}>
+                                <div className="p-4 space-y-2">
+                                    <button onClick={() => { setView('home'); setSelectedSeason(null); setSelectedCategory(null); setShowMobileMenu(false); }} className={`block w-full text-left px-4 py-3 rounded-lg ${darkMode ? 'hover:bg-neutral-700' : 'hover:bg-stone-100'}`}>Home</button>
+                                    <button onClick={() => { setView('seasons'); setShowMobileMenu(false); }} className={`block w-full text-left px-4 py-3 rounded-lg ${darkMode ? 'hover:bg-neutral-700' : 'hover:bg-stone-100'}`}>Shop by Season</button>
+                                    <button onClick={() => { setView('accessories'); setShowMobileMenu(false); }} className={`block w-full text-left px-4 py-3 rounded-lg ${darkMode ? 'hover:bg-neutral-700' : 'hover:bg-stone-100'}`}>Accessories</button>
+                                    {user && (
+                                        <button onClick={() => { handleLogout(); setShowMobileMenu(false); }} className={`block w-full text-left px-4 py-3 rounded-lg text-red-500 ${darkMode ? 'hover:bg-neutral-700' : 'hover:bg-stone-100'}`}>Logout</button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </header>
+
+                    {/* Homepage Promo Banner - Native Style */}
+                    {!selectedOutfit && (
+                        <div className="max-w-7xl mx-auto px-4 pt-4">
+                            <a 
+                                href="https://pinterestwealthacademy.com/" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                onClick={() => trackEvent('homepage_banner_click')}
+                                className={`block w-full py-3 px-4 text-center text-sm font-medium rounded-xl border transition-all hover:shadow-md ${darkMode ? 'bg-amber-900/40 border-amber-700/50 text-amber-200 hover:bg-amber-900/50' : 'bg-[#F5EDE4] border-[#E8DDD0] text-stone-700 hover:bg-[#EFE5D8] shadow-sm'}`}
+                            >
+                                🚀 Build a $2K/Month Pinterest Side Hustle | Learn How →
+                            </a>
+                        </div>
+                    )}
+
+                    {/* Loading State */}
+                    {loading && (
+                        <div className="flex items-center justify-center py-20">
+                            <div className={`animate-pulse ${darkMode ? 'text-neutral-500' : 'text-stone-400'}`}>Loading...</div>
+                        </div>
+                    )}
+
+                    {/* Home View - Masonry Grid */}
+                    {!loading && view === 'home' && !selectedOutfit && (
+                        <div className="max-w-7xl mx-auto px-4 py-6">
+                            {outfits.length === 0 && user && (
+                                <div className="text-center py-12">
+                                    <p className={`mb-4 ${darkMode ? 'text-neutral-400' : 'text-stone-500'}`}>No outfits yet. Add your first outfit!</p>
+                                    <button onClick={() => { setEditingOutfit(null); setShowOutfitModal(true); }} className="px-6 py-3 bg-stone-800 text-white rounded-lg dark:bg-neutral-600">Add Outfit</button>
+                                </div>
+                            )}
+                            <div className="masonry-grid">
+                                {displayedOutfits.map((outfit, idx) => (
+                                    <div key={outfit.id} className="masonry-item group relative">
+                                        <button onClick={() => handleOutfitClick(outfit)} className={`w-full relative overflow-hidden rounded-lg ${darkMode ? 'bg-neutral-800' : 'bg-stone-100'}`}>
+                                            <OptimizedImage 
+                                                src={outfit.mainImage} 
+                                                alt={outfit.mainImageAlt || `${outfit.season} outfit inspiration`} 
+                                                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                                                imageIndex={idx}
+                                                dataPinUrl={`${window.location.origin}/outfit/${outfit.slug || outfit.id}`}
+                                                dataPinDescription={outfit.seoTitle ? `${outfit.seoTitle} - ${outfit.metaDescription || ''}` : (outfit.metaDescription || `${outfit.season} outfit`)}
+                                            />
+                                            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity hidden md:block">
+                                                <button onClick={(e) => { e.stopPropagation(); handlePinIt(outfit.mainImage, outfit.metaDescription || `${outfit.season} outfit`, outfit.id, outfit.slug, outfit.seoTitle); }} className="pin-button bg-white/90 hover:bg-white p-2 rounded-full shadow-lg" aria-label="Pin this"><Pin /></button>
+                                            </div>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                            {displayCount < filteredOutfits.length && (
+                                <div className="text-center py-8"><div className={`inline-block animate-pulse font-light tracking-wide ${darkMode ? 'text-neutral-500' : 'text-stone-400'}`}>Loading more...</div></div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Seasons View */}
+                    {view === 'seasons' && !selectedSeason && (
+                        <div className="max-w-4xl mx-auto px-4 py-12">
+                            <div className="grid grid-cols-2 gap-4">
+                                {['spring', 'summer', 'fall', 'winter'].map(season => (
+                                    <button key={season} onClick={() => { setSelectedSeason(season); setDisplayCount(12); }} className={`aspect-square transition-colors rounded-lg flex items-center justify-center ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700' : 'bg-stone-100 hover:bg-stone-200'}`}>
+                                        <span className={`text-xl font-light uppercase tracking-widest ${darkMode ? 'text-neutral-300' : 'text-stone-700'}`}>{season}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Season Outfits */}
+                    {view === 'seasons' && selectedSeason && !selectedOutfit && (
+                        <div className="max-w-7xl mx-auto px-4 py-6">
+                            <h2 className={`text-2xl font-light text-center mb-8 capitalize ${darkMode ? 'text-neutral-200' : 'text-stone-800'}`}>{selectedSeason} Outfits</h2>
+                            <div className="masonry-grid">
+                                {displayedOutfits.map((outfit, idx) => (
+                                    <div key={outfit.id} className="masonry-item group relative">
+                                        <button onClick={() => handleOutfitClick(outfit)} className={`w-full relative overflow-hidden rounded-lg ${darkMode ? 'bg-neutral-800' : 'bg-stone-100'}`}>
+                                            <OptimizedImage 
+                                                src={outfit.mainImage}
+                                                imageIndex={idx} 
+                                                alt={outfit.mainImageAlt || `${outfit.season} outfit inspiration`} 
+                                                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                                                dataPinUrl={`${window.location.origin}/outfit/${outfit.slug || outfit.id}`}
+                                                dataPinDescription={outfit.seoTitle ? `${outfit.seoTitle} - ${outfit.metaDescription || ''}` : (outfit.metaDescription || `${outfit.season} outfit`)}
+                                            />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Accessories View */}
+                    {view === 'accessories' && !selectedCategory && (
+                        <div className="max-w-4xl mx-auto px-4 py-12">
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {['bags', 'shoes', 'jewelry', 'scarves', 'belts', 'hats', 'eyewear', 'hair', 'seasonal'].map(cat => (
+                                    <button key={cat} onClick={() => setSelectedCategory(cat)} className={`aspect-square transition-colors rounded-lg flex items-center justify-center ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700' : 'bg-stone-100 hover:bg-stone-200'}`}>
+                                        <span className={`text-xl font-light uppercase tracking-widest ${darkMode ? 'text-neutral-300' : 'text-stone-700'}`}>{cat}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Accessories Grid */}
+                    {view === 'accessories' && selectedCategory && (
+                        <div className="max-w-7xl mx-auto px-4 py-8">
+                            <h2 className={`text-2xl font-light text-center mb-8 capitalize ${darkMode ? 'text-neutral-200' : 'text-stone-800'}`}>{selectedCategory}</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {filteredAccessories.map(item => (
+                                    <a key={item.id} href={item.link} target="_blank" rel="noopener noreferrer" className="group">
+                                        <div className={`rounded-lg overflow-hidden hover:shadow-lg transition-shadow ${darkMode ? 'bg-neutral-800' : 'bg-stone-50'}`}>
+                                            <OptimizedImage src={item.image} alt={`${item.name} - ${item.category}`} className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            <div className="p-4 text-center"><p className={`font-light tracking-wide group-hover:opacity-80 ${darkMode ? 'text-neutral-200' : 'text-stone-700'}`}>{item.name}</p></div>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Selected Outfit Detail View */}
+                    {selectedOutfit && (
+                        <div className={darkMode ? 'bg-neutral-900' : 'bg-white'}>
+                            {/* Admin Controls */}
+                            {user && (
+                                <div className="max-w-6xl mx-auto px-4 pt-4">
+                                    <div className="flex gap-2 mb-4">
+                                        <button onClick={() => { setEditingOutfit(selectedOutfit); setShowOutfitModal(true); }} className={`flex-1 py-2 rounded-lg text-sm flex items-center justify-center gap-2 ${darkMode ? 'bg-neutral-700 hover:bg-neutral-600' : 'bg-stone-100 hover:bg-stone-200'}`}><Edit /> Edit</button>
+                                        <button onClick={() => duplicateOutfit(selectedOutfit)} className={`flex-1 py-2 rounded-lg text-sm flex items-center justify-center gap-2 ${darkMode ? 'bg-blue-900/50 hover:bg-blue-900/70 text-blue-300' : 'bg-blue-50 hover:bg-blue-100 text-blue-600'}`}><Duplicate /> Duplicate</button>
+                                        <button onClick={() => deleteOutfit(selectedOutfit.id)} className="py-2 px-4 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm flex items-center justify-center gap-2 dark:bg-red-900/30 dark:hover:bg-red-900/50"><Trash /> Delete</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Main Content */}
+                            <div className="max-w-6xl mx-auto px-4 py-4">
+                                {/* Top Section: Image + Title/Description */}
+                                <div className="flex flex-row gap-4 md:gap-6 mb-4">
+                                    {/* Main Outfit Image */}
+                                    <div className="relative group flex-shrink-0">
+                                        <div className="w-[160px] md:w-[220px] rounded-lg overflow-hidden relative bg-stone-50 dark:bg-neutral-800" style={{aspectRatio: '2/3'}}>
+                                            <OptimizedImage 
+                                                src={selectedOutfit.mainImage} 
+                                                alt={selectedOutfit.mainImageAlt || `${selectedOutfit.season} outfit inspiration`} 
+                                                className="w-full h-full object-contain"
+                                                dataPinUrl={`${window.location.origin}/outfit/${selectedOutfit.slug || selectedOutfit.id}`}
+                                                dataPinDescription={selectedOutfit.seoTitle ? `${selectedOutfit.seoTitle} - ${selectedOutfit.metaDescription || ''}` : (selectedOutfit.metaDescription || `${selectedOutfit.season} outfit`)}
+                                            />
+                                            <button 
+                                                onClick={() => handlePinIt(selectedOutfit.mainImage, selectedOutfit.metaDescription || `${selectedOutfit.season} outfit`, selectedOutfit.id, selectedOutfit.slug, selectedOutfit.seoTitle)} 
+                                                className="pin-button absolute top-2 right-2 bg-white hover:bg-white/90 p-1.5 rounded-full shadow-lg" 
+                                                aria-label="Pin this outfit"
+                                            >
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <line x1="12" y1="17" x2="12" y2="22"></line>
+                                                    <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Title + Description */}
+                                    <div className="flex-1 flex flex-col">
+                                        <h2 className={`text-base md:text-xl font-medium mb-2 md:mb-3 leading-tight ${darkMode ? 'text-white' : 'text-stone-800'}`}>
+                                            {selectedOutfit.seoTitle || 'Shop This Look'}
+                                        </h2>
+                                        <p className={`text-xs md:text-sm mb-3 md:mb-4 leading-relaxed ${darkMode ? 'text-neutral-300' : 'text-stone-600'}`}>
+                                            {selectedOutfit.metaDescription || `Discover this ${selectedOutfit.season} outfit and shop the items below.`}
+                                        </p>
+                                        <p className={`text-xs font-medium mb-3 md:mb-4 ${darkMode ? 'text-neutral-400' : 'text-stone-500'}`}>
+                                            {(selectedOutfit.items || []).length} Links
+                                        </p>
+
+                                        {/* Share Buttons - Desktop */}
+                                        <div className="hidden md:flex gap-2 mt-auto">
+                                            <button onClick={copyLink} className={`py-1.5 px-2.5 text-xs rounded-lg transition-colors flex items-center gap-1.5 ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300' : 'bg-stone-100 hover:bg-stone-200 text-stone-700'}`}>
+                                                {copied ? <Check /> : <Copy />}
+                                                <span>{copied ? 'Copied!' : 'Copy'}</span>
+                                            </button>
+                                            <button onClick={shareToInstagram} className={`py-1.5 px-2.5 text-xs rounded-lg transition-colors flex items-center gap-1.5 ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300' : 'bg-stone-100 hover:bg-stone-200 text-stone-700'}`}>
+                                                <Share2 />
+                                                <span>Instagram</span>
+                                            </button>
+                                            <button onClick={shareToFacebook} className={`py-1.5 px-2.5 text-xs rounded-lg transition-colors flex items-center gap-1.5 ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300' : 'bg-stone-100 hover:bg-stone-200 text-stone-700'}`}>
+                                                <Share2 />
+                                                <span>Facebook</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Mobile Share Buttons */}
+                                <div className="md:hidden grid grid-cols-4 gap-1.5 mb-3">
+                                    <button onClick={copyLink} className={`py-1.5 px-1 text-xs rounded transition-colors flex flex-col items-center justify-center gap-0.5 ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300' : 'bg-stone-100 hover:bg-stone-200 text-stone-700'}`}>
+                                        {copied ? <Check /> : <Copy />}
+                                        <span className="text-[9px]">{copied ? 'Copied' : 'Copy'}</span>
+                                    </button>
+                                    <button onClick={shareToInstagram} className={`py-1.5 px-1 text-xs rounded transition-colors flex flex-col items-center justify-center gap-0.5 ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300' : 'bg-stone-100 hover:bg-stone-200 text-stone-700'}`}>
+                                        <Share2 />
+                                        <span className="text-[9px]">Instagram</span>
+                                    </button>
+                                    <button onClick={shareToFacebook} className={`py-1.5 px-1 text-xs rounded transition-colors flex flex-col items-center justify-center gap-0.5 ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300' : 'bg-stone-100 hover:bg-stone-200 text-stone-700'}`}>
+                                        <Share2 />
+                                        <span className="text-[9px]">Facebook</span>
+                                    </button>
+                                    <button onClick={shareToMessenger} className={`py-1.5 px-1 text-xs rounded transition-colors flex flex-col items-center justify-center gap-0.5 ${darkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300' : 'bg-stone-100 hover:bg-stone-200 text-stone-700'}`}>
+                                        <Share2 />
+                                        <span className="text-[9px]">Messenger</span>
+                                    </button>
+                                </div>
+
+                                {/* Divider */}
+                                <div className={`border-t mb-3 ${darkMode ? 'border-neutral-700' : 'border-stone-200'}`}></div>
+
+                                {/* Outfit Page Promo Banner - Native Style */}
+                                <a 
+                                    href="https://pinterestwealthacademy.com/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    onClick={() => trackEvent('outfit_banner_click')}
+                                    className={`block mb-4 p-4 rounded-xl text-center transition-all shadow-sm hover:shadow-md ${darkMode ? 'bg-amber-900/40 border border-amber-700/50 hover:bg-amber-900/50' : 'bg-[#F5EDE4] border border-[#E8DDD0] hover:bg-[#EFE5D8]'}`}
+                                >
+                                    <p className={`text-sm font-medium ${darkMode ? 'text-amber-200' : 'text-stone-700'}`}>
+                                        🔥 How I Turn Outfit Pinning Into $2,847/Month →
+                                    </p>
+                                </a>
+
+                                {/* Product Grid */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                                    {(selectedOutfit.items || []).map((item, idx) => (
+                                        <a 
+                                            key={idx} 
+                                            href={item.link} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className={`group rounded-lg overflow-hidden transition-all hover:shadow-lg ${darkMode ? 'bg-neutral-800' : 'bg-white border border-stone-200'}`}
+                                        >
+                                            <div className="relative">
+                                                <OptimizedImage 
+                                                    src={item.image} 
+                                                    alt={item.altText || `${item.name} - Shop on Amazon`} 
+                                                    className="w-full object-cover" 
+                                                    style={{aspectRatio: '1/1'}}
+                                                />
+                                                <button 
+                                                    onClick={(e) => { e.preventDefault(); handlePinItem(item.image, item.name, item.link, selectedOutfit.id); }} 
+                                                    className="pin-button absolute top-2 right-2 bg-white hover:bg-white/90 p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity" 
+                                                    aria-label={`Pin ${item.name}`}
+                                                >
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <line x1="12" y1="17" x2="12" y2="22"></line>
+                                                        <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div className="p-3">
+                                                <p className={`text-sm leading-snug mb-2 line-clamp-2 font-medium ${darkMode ? 'text-neutral-200' : 'text-stone-800'}`}>
+                                                    {item.name}
+                                                </p>
+                                                <p className={`text-xs ${darkMode ? 'text-neutral-400' : 'text-stone-600'}`}>
+                                                    Shop on Amazon →
+                                                </p>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+
+                                {/* Style Notes Section - Visible and Styled */}
+                                {selectedOutfit.fullSeoDescription && (
+                                    <div className={`mt-10 rounded-xl overflow-hidden ${darkMode ? 'bg-neutral-800/50 border border-neutral-700' : 'bg-[#FAF8F5] border border-stone-200'}`}>
+                                        {/* Decorative top line */}
+                                        <div className={`h-1 ${darkMode ? 'bg-gradient-to-r from-neutral-700 via-neutral-600 to-neutral-700' : 'bg-gradient-to-r from-stone-200 via-stone-300 to-stone-200'}`}></div>
+                                        
+                                        <div className="p-6 md:p-8">
+                                            {/* Header with decorative elements */}
+                                            <div className="text-center mb-6">
+                                                <span className={`text-xs uppercase tracking-[0.2em] ${darkMode ? 'text-neutral-500' : 'text-stone-400'}`}>✦</span>
+                                                <h3 className={`style-notes text-xl md:text-2xl font-medium mt-2 mb-1 ${darkMode ? 'text-neutral-200' : 'text-stone-700'}`}>
+                                                    Style Notes
+                                                </h3>
+                                                <div className={`w-12 h-px mx-auto ${darkMode ? 'bg-neutral-600' : 'bg-stone-300'}`}></div>
+                                            </div>
+                                            
+                                            {/* Content */}
+                                            <p className={`text-sm md:text-base leading-relaxed whitespace-pre-wrap ${darkMode ? 'text-neutral-300' : 'text-stone-600'}`} style={{fontFamily: "'Inter', sans-serif"}}>
+                                                {selectedOutfit.fullSeoDescription}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Keep Exploring Section */}
+                                {nearbyOutfits.length > 0 && (
+                                    <div className={`mt-10 pt-8 border-t ${darkMode ? 'border-neutral-700' : 'border-stone-200'}`}>
+                                        <h3 className={`text-center text-lg font-light tracking-wide mb-6 ${darkMode ? 'text-neutral-300' : 'text-stone-600'}`}>
+                                            Keep Exploring
+                                        </h3>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                                            {nearbyOutfits.slice(0, 4).map(outfit => (
+                                                <button 
+                                                    key={outfit.id} 
+                                                    onClick={() => handleOutfitClick(outfit)}
+                                                    className={`group rounded-lg overflow-hidden transition-all hover:shadow-lg ${darkMode ? 'bg-neutral-800' : 'bg-white border border-stone-200'}`}
+                                                >
+                                                    <div className="relative">
+                                                        <OptimizedImage 
+                                                            src={outfit.mainImage} 
+                                                            alt={outfit.mainImageAlt || `${outfit.season} outfit`} 
+                                                            className="w-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                                                            style={{aspectRatio: '2/3'}}
+                                                        />
+                                                    </div>
+                                                    <div className="p-3">
+                                                        <p className={`text-sm leading-snug line-clamp-2 font-medium ${darkMode ? 'text-neutral-200' : 'text-stone-800'}`}>
+                                                            {outfit.seoTitle || `${outfit.season} outfit`}
+                                                        </p>
+                                                    </div>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Before You Go Banner - Exit Intent (Soft Coral) */}
+                                <a 
+                                    href="https://pinterestwealthacademy.com/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    onClick={() => trackEvent('exit_banner_click')}
+                                    className={`block mt-8 p-4 rounded-xl text-center transition-all shadow-sm hover:shadow-md border ${darkMode ? 'bg-rose-900/20 border-rose-800/50 hover:bg-rose-900/30' : 'bg-[#FDF2F0] border-[#F5DDD8] hover:bg-[#FAEAE6]'}`}
+                                >
+                                    <p className={`text-sm font-medium ${darkMode ? 'text-rose-200' : 'text-stone-700'}`}>
+                                        💰 Before You Go: See How to Turn Pinterest Into $2,847/Month →
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Back to Top Button */}
+                    {showBackToTop && (
+                        <button onClick={scrollToTop} className={`fixed bottom-8 right-8 p-3 rounded-full shadow-lg transition-colors z-40 ${darkMode ? 'bg-neutral-700 hover:bg-neutral-600 text-white' : 'bg-stone-800 hover:bg-stone-900 text-white'}`} aria-label="Back to top"><ArrowUp /></button>
+                    )}
+
+                    {/* Modals */}
+                    {showLogin && <AdminLogin onLogin={() => setShowLogin(false)} onClose={() => setShowLogin(false)} />}
+                    {showOutfitModal && <OutfitModal outfit={editingOutfit} onSave={saveOutfit} onClose={() => { setShowOutfitModal(false); setEditingOutfit(null); }} darkMode={darkMode} />}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<FashionFinds />, document.getElementById('root'));
+    </script>
+    <script async defer src="https://assets.pinterest.com/js/pinit.js" data-pin-build="doBuild"></script>
+</body>
+</html>
